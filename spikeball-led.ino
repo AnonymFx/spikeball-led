@@ -3,16 +3,15 @@
 #include "FastLED.h"
 #include "ESP8266WiFi.h"
 
-#include <DNSServer.h>            //Local DNS Server used for redirecting all requests to the configuration portal
-#include <ESP8266WebServer.h>     //Local WebServer used to serve the configuration portal
-#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
-
 // How many leds are there in your strip?
 #define NUM_LEDS 178
 
 // Where is the LED data line connected?
 #define LED_DATA D3
 
+// Wifi credentials
+#define STASSID "Pretty fly for a wifi"
+#define STAPSK "sosave420"
 
 // Speed 0..8 (quadratic divisor of milliseconds)
 // 0 = so fast that it's definitely not recommended for photosensitive people
@@ -27,18 +26,34 @@ byte bright = 1;
 // the array of leds
 CRGB leds[NUM_LEDS];
 
-void setup() {
+void connectToWifi() {
 	// Init WifiManager
-	WiFiManager wifiManager;
-	wifiManager.autoConnect("spikeball-led","spike420");
-	
+	Serial.print("Connecting to ");
+	Serial.println(STASSID);
+
+	WiFi.mode(WIFI_STA);
+	WiFi.begin(STASSID, STAPSK);
+
+	while(WiFi.status() != WL_CONNECTED) {
+		delay(500);
+		Serial.print(".");
+	}
+
+	Serial.println("");
+	Serial.println("WiFi connected");
+}
+
+void setup() {
+	Serial.begin(230400);
+
+	connectToWifi();
+
 	// Initialize the LEDs
 	pinMode(LED_DATA, OUTPUT);
 	FastLED.addLeds<WS2812B, LED_DATA, GRB>(leds, NUM_LEDS);
 	FastLED.setBrightness(64);
 
 #ifdef DEBUG
-	Serial.begin(230400);
 	Serial.println("\n\n === Lamp_Simple1Button.ino ===\n\n");
 #endif
 }
