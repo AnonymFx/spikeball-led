@@ -89,7 +89,8 @@ void loop() {
         switch (input) {
             case 'a':
                 // change speed
-                char speed_inp = telnetClient.read();
+                char speed_inp;
+				speed_inp = telnetClient.read();
                 switch (speed_inp) {
                     case '0':
                         speed_div = 0;
@@ -108,7 +109,8 @@ void loop() {
                 break;
             case 'b':
                 // change speed_div
-                char bright_inp = telnetClient.read();
+                char bright_inp;
+				bright_inp = telnetClient.read();
                 switch (bright_inp) {
                     case '0':
                         brightness = 8;
@@ -153,7 +155,7 @@ void loop() {
             break;
         case 'e':
             // moving rainbw
-            fill_rainbow(half_leds, NUM_LEDS, (ms >> SPEED_DIV) & 0xFF, 255/NUM_LEDS);
+            fill_rainbow(half_leds, NUM_LEDS, (ms >> speed_div) & 0xFF, 255/NUM_LEDS);
             break;
     }
 
