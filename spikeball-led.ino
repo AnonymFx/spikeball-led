@@ -21,7 +21,7 @@ CRGB all_leds[ALL_LEDS];
 CRGB half_leds[NUM_LEDS];
 
 // the currently selected color mode
-int mode = 0;
+char mode = 'a';
 
 WiFiServer telnetServer(23);
 WiFiClient telnetClient;
@@ -79,23 +79,24 @@ void loop() {
         }
     }
 
-    while(telnetClient.available()) {
+    if(telnetClient.available()) {
         mode = telnetClient.read();
         Serial.println(mode);
     }
+	telnetClient.flush();
 
     switch (mode) {
-        case 0:
+        case 'a':
             // all white
             fill_solid(half_leds, NUM_LEDS, CRGB::White);
             // fill_solid(half_leds, 5, CRGB::Red);
             break;
-        case 1:
+        case 'b':
             // flashing ring
             fill_solid(half_leds, NUM_LEDS, CRGB::Red);
             // flashing_ring();
             break;
-        case 2:
+        case 'c':
             // moving rainbw
             // fill_rainbow(half_leds, NUM_LEDS, );
             // moving_rainbow();
