@@ -28,28 +28,28 @@ byte bright = 1;
 CRGB leds[NUM_LEDS];
 
 void setup() {
-  // Initialize the LEDs
-  pinMode(LED_DATA, OUTPUT); 
-  FastLED.addLeds<WS2812B, LED_DATA, GRB>(leds, NUM_LEDS);
-  FastLED.setBrightness(64);
-  
-  #ifdef DEBUG
-  Serial.begin(230400);
-  Serial.println("\n\n === Lamp_Simple1Button.ino ===\n\n");
-  #endif
+	// Initialize the LEDs
+	pinMode(LED_DATA, OUTPUT);
+	FastLED.addLeds<WS2812B, LED_DATA, GRB>(leds, NUM_LEDS);
+	FastLED.setBrightness(64);
+
+#ifdef DEBUG
+	Serial.begin(230400);
+	Serial.println("\n\n === Lamp_Simple1Button.ino ===\n\n");
+#endif
 }
 
 void loop() {
-  // I usually save the current millisecond count per loop.
-  uint32_t ms = millis();
+	// I usually save the current millisecond count per loop.
+	uint32_t ms = millis();
 
-  fill_solid(leds, NUM_LEDS, CRGB::Black);
-  leds[0]=CRGB::Green;
-  leds[50]=CRGB::Red;
-  leds[100]=CRGB::Red;
-  leds[150]=CRGB::Red;
-  leds[177]=CRGB::Yellow;
-  FastLED.show();
+	fill_solid(leds, NUM_LEDS, CRGB::Black);
+	leds[0]=CRGB::Green;
+	leds[50]=CRGB::Red;
+	leds[100]=CRGB::Red;
+	leds[150]=CRGB::Red;
+	leds[177]=CRGB::Yellow;
+	FastLED.show();
 
-  wdt_reset();
+	wdt_reset();
 }
