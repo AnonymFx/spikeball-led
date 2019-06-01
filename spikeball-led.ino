@@ -51,14 +51,5 @@ void loop() {
   leds[177]=CRGB::Yellow;
   FastLED.show();
 
-  /* EVERY_N_MILLISECONDS(10) { */
-
-  /*   // fill the leds array with a rainbow, starting at a value determined by ms and SPEED_DIV */
-  /*   fill_rainbow(leds, NUM_LEDS, (ms >> SPEED_DIV) & 0xFF, 255/NUM_LEDS); */
-
-  /*   // push the leds array out to the LED strip */
-  /*   FastLED.show(); */
-  /* } */
-  // reset the watchdog (normally, the Wifi library does this, but we have disabled it).
   wdt_reset();
 }
