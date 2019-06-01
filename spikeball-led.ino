@@ -8,7 +8,7 @@
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
 
 // How many leds are there in your strip?
-#define NUM_LEDS 250
+#define NUM_LEDS 178
 
 // Where is the LED data line connected?
 #define LED_DATA D3
