@@ -11,7 +11,7 @@
 #define STAPSK "sosave420"
 
 // How many leds are there in your strip?
-#define ALL_LEDS 30 //178
+#define ALL_LEDS 178
 #define NUM_LEDS ALL_LEDS/2
 
 // the array of leds
