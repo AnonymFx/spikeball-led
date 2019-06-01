@@ -36,15 +36,6 @@ Serial.print("Connecting to ");
 
 	WiFi.mode(WIFI_STA);
 	WiFi.begin(STASSID, STAPSK);
-
-	while(WiFi.status() != WL_CONNECTED) {
-		delay(500);
-		Serial.print(".");
-	}
-
-	Serial.println("");
-	Serial.print("WiFi connected with IP ");
-	Serial.println(WiFi.localIP());
 }
 
 void startServer() {
