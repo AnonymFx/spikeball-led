@@ -21,7 +21,10 @@ CRGB all_leds[ALL_LEDS];
 CRGB half_leds[NUM_LEDS];
 
 // the currently selected color mode
-char mode = 'a';
+char mode = 'c';
+
+int brightness = 32;
+byte speed_div = 4;
 
 WiFiServer telnetServer(23);
 WiFiClient telnetClient;
@@ -58,7 +61,7 @@ void setup() {
     // Initialize the LEDs
     pinMode(LED_DATA, OUTPUT);
     FastLED.addLeds<WS2812B, LED_DATA, GRB>(all_leds, ALL_LEDS);
-    FastLED.setBrightness(64);
+    FastLED.setBrightness(brightness);
 
     fill_solid(all_leds, ALL_LEDS, CRGB::Black);
     FastLED.show();
@@ -69,6 +72,8 @@ void setup() {
 }
 
 void loop() {
+    uint32_t ms = millis();
+
     if(telnetServer.hasClient()) {
         if(!telnetClient || !telnetClient.connected()) {
             if (telnetClient) {
@@ -80,26 +85,75 @@ void loop() {
     }
 
     if(telnetClient.available()) {
-        mode = telnetClient.read();
+        char input = telnetClient.read();
+        switch (input) {
+            case 'a':
+                // change speed
+                char speed_inp = telnetClient.read();
+                switch (speed_inp) {
+                    case '0':
+                        speed_div = 0;
+                        break;
+                    case '1':
+                        speed_div = 2;
+                        break;
+                    case '2':
+                        speed_div = 4;
+                        break;
+                    case '3':
+                        speed_div = 6;
+                        break;
+
+                }
+                break;
+            case 'b':
+                // change speed_div
+                char bright_inp = telnetClient.read();
+                switch (bright_inp) {
+                    case '0':
+                        brightness = 8;
+                        break;
+                    case '1':
+                        brightness = 16;
+                        break;
+                    case '2':
+                        brightness = 32;
+                        break;
+                    case '3':
+                        brightness = 64;
+                        break;
+                    case '4':
+                        brightness = 96;
+                        break;
+                    case '5':
+                        brightness = 128;
+                        break;
+                }
+                break;
+            default:
+                mode = input;
+                break;
+        }
+
+        FastLED.setBrightness(brightness);
         Serial.println(mode);
     }
 	telnetClient.flush();
 
     switch (mode) {
-        case 'a':
+        case 'c':
             // all white
             fill_solid(half_leds, NUM_LEDS, CRGB::White);
             // fill_solid(half_leds, 5, CRGB::Red);
             break;
-        case 'b':
+        case 'd':
             // flashing ring
             fill_solid(half_leds, NUM_LEDS, CRGB::Red);
             // flashing_ring();
             break;
-        case 'c':
+        case 'e':
             // moving rainbw
-            // fill_rainbow(half_leds, NUM_LEDS, );
-            // moving_rainbow();
+            fill_rainbow(half_leds, NUM_LEDS, (ms >> SPEED_DIV) & 0xFF, 255/NUM_LEDS);
             break;
     }
 
