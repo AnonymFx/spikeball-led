@@ -10,8 +10,10 @@
 #define LED_DATA D3
 
 // Wifi credentials
-#define STASSID "Pretty fly for a wifi"
-#define STAPSK "sosave420"
+/* #define STASSID "Pretty fly for a wifi" */
+/* #define STAPSK "sosave420" */
+#define STASSID "Nerdsphone"
+#define STAPSK "bierbierbierbettbettbett"
 
 // Speed 0..8 (quadratic divisor of milliseconds)
 // 0 = so fast that it's definitely not recommended for photosensitive people
@@ -25,6 +27,9 @@ byte bright = 1;
 
 // the array of leds
 CRGB leds[NUM_LEDS];
+
+WiFiServer telnetServer(23);
+WiFiClient telnetClient;
 
 void connectToWifi() {
 	// Init WifiManager
@@ -40,13 +45,20 @@ void connectToWifi() {
 	}
 
 	Serial.println("");
-	Serial.println("WiFi connected");
+	Serial.print("WiFi connected with IP ");
+	Serial.println(WiFi.localIP());
+}
+
+void startServer() {
+	telnetServer.begin();
+	telnetServer.setNoDelay(true);
 }
 
 void setup() {
 	Serial.begin(230400);
 
 	connectToWifi();
+	startServer();
 
 	// Initialize the LEDs
 	pinMode(LED_DATA, OUTPUT);
@@ -59,6 +71,21 @@ void setup() {
 }
 
 void loop() {
+	if(telnetServer.hasClient()) {
+		if(!telnetClient || !telnetClient.connected()) {
+			if (telnetClient) {
+				telnetClient.stop();
+			}
+			telnetClient = telnetServer.available();
+			telnetClient.flush();
+		}
+	}
+
+	while(telnetClient.available()) {
+		Serial.println(telnetClient.read());
+	}
+	delay(10);
+
 	// I usually save the current millisecond count per loop.
 	uint32_t ms = millis();
 
@@ -69,6 +96,4 @@ void loop() {
 	leds[150]=CRGB::Red;
 	leds[177]=CRGB::Yellow;
 	FastLED.show();
-
-	wdt_reset();
 }
