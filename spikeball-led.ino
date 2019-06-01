@@ -193,6 +193,9 @@ void loop() {
 			// moving rainbw
 			juggle();
 			break;
+        case 'k':
+            flash_all();
+            break;
 	}
 
 	spaceOutPixels();
@@ -272,4 +275,14 @@ void juggle() {
 		half_leds[beatsin16( i+7, 0, NUM_LEDS-1 )] |= CHSV(dothue, 200, 255);
 		dothue += 32;
 	}
+}
+
+void flash_all() {
+    int treshold = 100;
+    if (gHue > treshold) {
+        gHue = 0;
+        fill_solid(half_leds, NUM_LEDS, CRGB::Red);
+    } else {
+        fill_solid(half_leds, NUM_LEDS, CRGB::Black);
+    }
 }
