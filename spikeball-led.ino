@@ -26,6 +26,8 @@ char mode = 'c';
 int brightness = 32;
 byte speed_div = 4;
 
+uint32_t start_time;
+
 WiFiServer telnetServer(23);
 WiFiClient telnetClient;
 
@@ -55,6 +57,8 @@ void startServer() {
 void setup() {
     Serial.begin(230400);
 
+    start_time = millis();
+
     connectToWifi();
     startServer();
 
@@ -72,8 +76,6 @@ void setup() {
 }
 
 void loop() {
-    uint32_t ms = millis();
-
     if(telnetServer.hasClient()) {
         if(!telnetClient || !telnetClient.connected()) {
             if (telnetClient) {
@@ -142,6 +144,8 @@ void loop() {
     }
 	telnetClient.flush();
 
+    uint32_t time_since_start = millis() - start_time;
+
     switch (mode) {
         case 'c':
             // all white
@@ -155,7 +159,7 @@ void loop() {
             break;
         case 'e':
             // moving rainbw
-            fill_rainbow(half_leds, NUM_LEDS, (ms >> speed_div) & 0xFF, 255/NUM_LEDS);
+            fill_rainbow(half_leds, NUM_LEDS, (time_since_start >> speed_div) & 0xFF, 255/NUM_LEDS);
             break;
     }
 
