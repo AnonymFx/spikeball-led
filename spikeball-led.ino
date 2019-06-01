@@ -28,6 +28,10 @@ byte bright = 1;
 CRGB leds[NUM_LEDS];
 
 void setup() {
+	// Init WifiManager
+	WiFiManager wifiManager;
+	wifiManager.autoConnect("spikeball-led","spike420");
+	
 	// Initialize the LEDs
 	pinMode(LED_DATA, OUTPUT);
 	FastLED.addLeds<WS2812B, LED_DATA, GRB>(leds, NUM_LEDS);
