@@ -26,8 +26,6 @@ char mode = 'c';
 int brightness = 32;
 byte speed_div = 4;
 
-uint32_t start_time;
-
 WiFiServer telnetServer(23);
 WiFiClient telnetClient;
 
@@ -54,28 +52,7 @@ void startServer() {
     telnetServer.setNoDelay(true);
 }
 
-void setup() {
-    Serial.begin(230400);
-
-    start_time = millis();
-
-    connectToWifi();
-    startServer();
-
-    // Initialize the LEDs
-    pinMode(LED_DATA, OUTPUT);
-    FastLED.addLeds<WS2812B, LED_DATA, GRB>(all_leds, ALL_LEDS);
-    FastLED.setBrightness(brightness);
-
-    fill_solid(all_leds, ALL_LEDS, CRGB::Black);
-    FastLED.show();
-
-    #ifdef DEBUG
-        Serial.println("\n\n === Lamp_Simple1Button.ino ===\n\n");
-    #endif
-}
-
-void loop() {
+void readTelnet() {
     if(telnetServer.hasClient()) {
         if(!telnetClient || !telnetClient.connected()) {
             if (telnetClient) {
@@ -139,12 +116,35 @@ void loop() {
                 break;
         }
 
-        FastLED.setBrightness(brightness);
         Serial.println(mode);
     }
 	telnetClient.flush();
+}
 
-    uint32_t time_since_start = millis() - start_time;
+void setup() {
+    Serial.begin(230400);
+
+    connectToWifi();
+    startServer();
+
+    // Initialize the LEDs
+    pinMode(LED_DATA, OUTPUT);
+    FastLED.addLeds<WS2812B, LED_DATA, GRB>(all_leds, ALL_LEDS);
+    FastLED.setBrightness(brightness);
+
+    fill_solid(all_leds, ALL_LEDS, CRGB::Black);
+    FastLED.show();
+
+    #ifdef DEBUG
+        Serial.println("\n\n === Lamp_Simple1Button.ino ===\n\n");
+    #endif
+}
+
+void loop() {
+    uint32_t ms = millis();
+
+	readTelnet();
+	FastLED.setBrightness(brightness);
 
     switch (mode) {
         case 'c':
@@ -159,7 +159,7 @@ void loop() {
             break;
         case 'e':
             // moving rainbw
-            fill_rainbow(half_leds, NUM_LEDS, (time_since_start >> speed_div) & 0xFF, 255/NUM_LEDS);
+            fill_rainbow(half_leds, NUM_LEDS, (ms >> speed_div) & 0xFF, 255/NUM_LEDS);
             break;
     }
 
