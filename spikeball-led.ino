@@ -7,13 +7,11 @@
 #define LED_DATA D3
 
 // Wifi credentials
-/* #define STASSID "Pretty fly for a wifi" */
-/* #define STAPSK "sosave420" */
-#define STASSID "Nerdsphone"
-#define STAPSK "bierbierbierbettbettbett"
+#define STASSID "Pretty fly for a wifi"
+#define STAPSK "sosave420"
 
 // How many leds are there in your strip?
-#define ALL_LEDS 30 // 178
+#define ALL_LEDS 30 //178
 #define NUM_LEDS ALL_LEDS/2
 
 // the array of leds
@@ -21,9 +19,9 @@ CRGB all_leds[ALL_LEDS];
 CRGB half_leds[NUM_LEDS];
 
 // the currently selected color mode
-char mode = 'e';
+char mode = 'c';
 
-int brightness = 8;
+int brightness = 128;
 byte speed_div = 5;
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 int counter = 0;
@@ -33,7 +31,7 @@ WiFiClient telnetClient;
 
 void connectToWifi() {
 	// Init WifiManager
-	Serial.print("Connecting to ");
+Serial.print("Connecting to ");
 	Serial.println(STASSID);
 
 	WiFi.mode(WIFI_STA);
@@ -61,6 +59,7 @@ void readTelnet() {
 				telnetClient.stop();
 			}
 			telnetClient = telnetServer.available();
+			telnetClient.write("\n\nspeed change (a[0-3])\nbrightness change (b[0-5])\nall white (c)\nall red (d)\nrainbow (e)\nrainbowWithGlitter(f)\nconfetti (g)\nsinelon (h)\nbpm (i)\njuggle (j)\n\n");
 			telnetClient.flush();
 		}
 	}
