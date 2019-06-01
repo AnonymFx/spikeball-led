@@ -28,9 +28,6 @@ byte bright = 1;
 CRGB leds[NUM_LEDS];
 
 void setup() {
-  // make sure the Wifi chip is off, we don't need it.
-  WiFi.forceSleepBegin();
-
   // Initialize the LEDs
   pinMode(LED_DATA, OUTPUT); 
   FastLED.addLeds<WS2812B, LED_DATA, GRB>(leds, NUM_LEDS);
